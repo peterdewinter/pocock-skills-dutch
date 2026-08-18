@@ -1,81 +1,84 @@
 ---
 name: writing-for-agents
-description: Writing documents for agents. Use when creating or editing skills, or modifying AGENTS.md or CLAUDE.md.
+description: Documenten schrijven voor agents. Te gebruiken bij het maken of bewerken van skills, of bij het aanpassen van AGENTS.md of CLAUDE.md.
 ---
 
-Reference for writing any document an agent consumes — a skill, an `AGENTS.md` / `CLAUDE.md`, a doc reached by a pointer. The packaging differs; the writing does not: the same levers make each one predictable — the agent taking the same _process_ every run, not producing the same output.
+Naslagwerk voor het schrijven van elk document dat een agent verbruikt — een vaardigheid, een `AGENTS.md` / `CLAUDE.md`, of een document dat via een verwijzing van hieruit wordt bereikt. De verpakking verschilt; het schrijven niet: dezelfde hefbomen maken elk document voorspelbaar — waarbij de agent elke uitvoering hetzelfde _proces_ doorloopt, in plaats van dezelfde output produceert.
 
-When the document you're writing is a skill, read [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md) for frontmatter, invocation choice, and router skills.
+Wanneer het document dat je schrijft een vaardigheid is, lees dan [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md) voor de frontmatter, de keuze van aanroep (invocation) en routeringsvaardigheden.
 
-## Context pointers
+## Contextpointers (Context pointers)
 
-A **context pointer** is a reference held in the agent's context that names some out-of-context material and encodes the condition for reaching it. A skill's description is one; a line in `AGENTS.md` naming a doc is the same object. The pointer's _wording_, not its target, decides when the agent reaches the material — and how reliably. A must-have target behind a weakly worded pointer is a variance bug: sharpen the wording first, and inline the material only if sharpening fails.
+Een **contextpointer** is een verwijzing die in de context van de agent leeft,  
+die een stuk materiaal **buiten** die context benoemt en de **voorwaarde** codeert waaronder de agent dat materiaal moet bereiken. De beschrijving van een skill is zo’n pointer; een regel in `AGENTS.md` / `CLAUDE.md` die een document benoemt, eveneens. De _formulering_ van de pointer, en niet het doel ervan, bepaalt wanneer de agent het materiaal bereikt — en hoe betrouwbaar dat gebeurd. Een essentieel doel achter een **zwak geformuleerde pointer** veroorzaakt variatie: maak eerst de formulering scherper, en zet het materiaal alleen inline wanneer aanscherpen niet lukt.
 
-A pointer does two jobs — state what the material is, and list the **branches** that should trigger reaching it (a branch is a distinct case the document handles, so different runs take different paths through it). Every word of an always-loaded pointer costs on every turn, so it earns even harder pruning than the body:
+Een pointer heeft twee taken — aangeven wat het materiaal is, en de **vertakkingen (branches)** opsommen die het bereiken ervan moeten aansturen (een vertakking is een specifiek geval dat het document afhandelt, zodat verschillende uitvoeringen verschillende paden doorlopen). Elk woord van een pointer die altijd is geladen, kost iets bij elke beurt, en daarom verdient deze een nog strengere snoei dan de hoofdtekst:
 
-- **Front-load the leading word** — the pointer is where it does its triggering work.
-- **One trigger per branch.** Synonyms that rename a single branch are one branch written twice; collapse them and keep only genuinely distinct branches.
-- **Cut identity the body already carries.**
+- **Plaats het belangrijkste woord vooraan (Front-load)** — de pointer bevindt zich op de plek waar deze zijn oproepend werk doet.
+- **Eén trigger per vertakking.** Synoniemen die een enkele vertakking hernoemen zijn één vertakking die twee keer is geschreven; voeg ze samen en behoud alleen echt onderscheidende vertakkingen.
+- **Schrap identiteit die de hoofdtekst al draagt.**
 
-## The two loads
+## De twee belastingen (The two loads)
 
-Every document and pointer you add spends one of two budgets:
+Elk document en elke pointer die je toevoegt, verbruikt een van de twee budgetten:
 
-- **Context load** — the cost of always-loaded material on the agent's window: an `AGENTS.md` line, a skill description, anything sitting in context every turn, spending tokens and attention whether or not it fires.
-- **Cognitive load** — the cost on the human: which documents exist and when to reach for each. The human is the index. Not a cost to minimise — it is the price of human agency; spend it where human judgement matters, remove it where it does not.
+- **Contextbelasting (Context load)** — de kosten van materiaal dat altijd is geladen in het venster van de agent: een regel in `AGENTS.md` / `CLAUDE.md`, een beschrijving van een skill, of iets dat bij elke beurt in de context staat en tokens en aandacht verbruikt, ongeacht of het wordt geactiveerd.
+- **Cognitieve belasting (Cognitive load)** — de kosten voor de mens: welke documenten bestaan er en wanneer moet je elk document raadplegen. De mens is de index. Dit is geen kostenpost om te minimaliseren — het is de prijs van de menselijke agent; besteed dit waar menselijk oordeel ertoe doet, en verwijder het waar dat niet zo is.
 
-Material reached only through a pointer escapes context load at the price of the pointer's own line; material with no pointer at all rides entirely on cognitive load.
+Materiaal dat alleen via een pointer wordt bereikt, ontkomt aan de contextbelasting tegen de prijs van de eigen regel van de pointer; materiaal zonder enige pointer leunt volledig op de cognitieve belasting.
 
-## Information hierarchy
+## Informatiehiërarchie
 
-A document is built from two content types — **steps** (the ordered actions the agent performs) and **reference** (definitions, rules, facts consulted on demand) — that mix freely: all steps (a recipe), all reference (a review's rules, this skill), or both. The core decision is where each piece sits on the **information hierarchy**, a ladder ranked by how immediately the agent needs the material:
+Een document is opgebouwd uit twee inhoudstypen — **stappen** (de geordende acties die de agent uitvoert) en **referentie** (definities, regels, feiten die op verzoek worden geraadpleegd) — die vrij met elkaar kunnen worden gemengd: alleen stappen (een recept), alleen referenties (de regels van een review, deze vaardigheid), of beide. D De kernbeslissing is waar elk onderdeel thuishoort op de **informatiehiërarchie**, een ladder gerangschikt naar hoe **onmiddellijk** de agent het materiaal nodig heeft:
 
-1. **In-file step** — the primary tier: what the agent does, in order.
-2. **In-file reference** — consulted on demand. Often a legitimately flat peer-set (every rule of a review on one rung) — a fine arrangement, not a smell.
-3. **Disclosed reference** — pushed out into a separate file, reached by a context pointer, loaded only when the pointer fires. Spans a sibling file in the same folder through fully external reference that lives anywhere and any document can point at.
+1. **Stap in het bestand (In-file step)** — de primaire laag: wat de agent doet, in volgorde.
+2. **Naslagwerk in het bestand (In-file reference)** — wordt geraadpleegd op verzoek. Vaak een legitiem plat niveau (elke regel van een review op één sport) — een prima opstelling, geen slecht teken.
+3. **Openbaar gemaakte naslagwerken (Disclosed reference)** — naar buiten verplaatst naar een apart bestand, bereikt via een contextpointer, en alleen geladen wanneer de pointer wordt geactiveerd. Dit omvat een aanverwant bestand in dezelfde map tot volledig externe naslagwerken die overal kunnen staan en waarnaar elk document kan verwijzen.
 
-Push too little down and the top bloats; push too much and you hide material the agent actually needs. That tension is the whole decision.
+Als je te weinig naar beneden verplaatst, zwelt de bovenkant op; als je te veel verplaatst, verberg je materiaal dat de agent daadwerkelijk nodig heeft. Die spanning is de hele beslissing.
 
-**Progressive disclosure** is the move down the ladder — out of the main file and behind a pointer — so the top stays legible. Not primarily a token optimisation: it is how the hierarchy is protected. Branching is the cleanest disclosure test: inline what every branch needs, and push behind a pointer what only some branches reach. When a document has steps, in-file reference that should be disclosed buries them and turns attending to them into a coin-flip — a variance lever, not just a legibility one.
+**Progressieve openbaarmaking (Progressive disclosure)** is de beweging naar beneden op de ladder — uit het hoofdbestand en achter een pointer — zodat de bovenkant leesbaar blijft. Dit is niet primair een token-optimalisatie: het is de manier waarop de hiërarchie wordt beschermd. Vertakking is de schoonste test voor openbaarmaking: neem op wat elke vertakking nodig heeft, en verberg achter een pointer wat slechts door sommige vertakkingen wordt bereikt. Wanneer een document stappen bevat, begraaft in-file naslagwerk dat openbaar gemaakt zou moeten worden deze stappen, waardoor het opvolgen ervan verandert in een muntjesspel — een hefboom voor variantie, en niet alleen voor leesbaarheid.
 
-**Co-location** is the within-file companion: where the ladder decides _how far down_ a piece sits, co-location decides _what sits beside it_ once there. Keep a concept's definition, rules, and caveats under one heading rather than scattered, so reading one part brings its neighbours with it. The test: the document should read like documentation written for the agent — grouped material reads that way; scattered material does not. (Distinct from duplication: that repeats one meaning in two places; scattering fragments one meaning across many.)
+**Co-locatie (Co-location)** is de metgezel binnen het bestand: waar de ladder beslist _hoe ver naar beneden_ een stuk zich bevindt, beslist co-locatie _wat er naast staat_ zodra het daar is. Houd de definitie, regels en kanttekeningen van een concept onder één kop in plaats van verspreid, zodat het lezen van het ene deel de buren meebrengt. De test: het document moet lezen als documentatie geschreven voor de agent — gegroepeerd materiaal leest zo; verspreid materiaal niet. (Dit verschilt van duplicatie: dat herhaalt één betekenis op twee plaatsen; verspreiding fragmenteert één betekenis over vele plaatsen.)
 
-**Sprawl** is the failure mode here: a document simply too long, even when every line is live and unique. Attention thins across the excess, and every extra line is one more to keep relevant. The cure is the ladder: disclose reference behind pointers, and split by branch or sequence so each path carries only what it needs.
+**Wildgroei (Sprawl)** is de faalmodus hier: een document dat simpelweg te lang is, zelfs wanneer elke regel levend en uniek is. Aandacht verdunt zich over het teveel, en elke extra lijn is er één die je relevant moet houden. De oplossing is de ladder: maak naslagwerk openbaar achter pointers, en splits op per vertakking of volgorde, zodat elk pad alleen draagt wat het nodig heeft.
 
-## Steps and completion criteria
+## Stappen en voltooiingscriteria (Steps and completion criteria)
 
-Every step ends on a **completion criterion** — the condition that tells the agent the work is done. Two properties make it a lever:
+Elke stap eindigt op een **voltooiingscriterium** — de voorwaarde die de agent vertelt dat het werk gedaan is. Twee eigenschappen maken dit een hefboom:
 
-- **Clarity** — can the agent tell done from not-done? A vague bound ("understanding reached") invites **premature completion**: ending the step before it is genuinely done, attention slipping to _being done_. The visible steps still ahead — the **post-completion steps** — supply the pull; the criterion's clarity is the resistance. Defend in order: **sharpen the bound first** (local and cheap); only if it is irreducibly fuzzy _and_ you observe the rush, hide the later steps by splitting the sequence — and hiding only works across a real context boundary (a hand-off or a subagent dispatch; an inline call leaves the later steps in context and clears nothing).
-- **Demand** — how much it requires. "Every modified model accounted for" forces thorough work where "produce a change list" does not. Demand drives **legwork** — the digging the agent does within the work, latent in the wording rather than written as its own step — and it is not step-bound: "every rule applied" binds a body of flat reference just as "every step done" binds a sequence, which is how an all-reference document still carries an exhaustiveness bar.
+- **Duidelijkheid** — kan de agent onderscheiden wat af is en wat niet?  
+	Een vage grens (“begrip bereikt”) nodigt uit tot **voortijdige afronding**: de stap wordt beëindigd vóór hij echt klaar is, omdat de aandacht verschuift naar _klaar willen zijn_. De zichtbare stappen die nog volgen — de **post‑completion‑stappen** — trekken de agent vooruit; de helderheid van het criterium vormt de tegenkracht.Verdedig in deze volgorde:	**verduidelijk eerst de grens** (lokaal en goedkoop);pas wanneer die grens onherleidbaar vaag blijft _én_ je merkt dat de agent zich haast, verberg je de latere stappen door de sequentie op te splitsen — en verbergen werkt alleen wanneer er een echte contextgrens is (een overdracht of een subagent‑dispatch; een inline‑aanroep laat de latere stappen in de context staan en verbergt dus niets).
+- **Vraagstelling/Eis (Demand)** — hoeveel het vereist. "Elk gewijzigd model verantwoord" dwingt grondig werk af waar "produceer een wijzigingslijst" dat niet doet. De vraagstelling/eis bepaalt de **inspanning** — het graafwerk dat de agent binnen het materiaal moet doen, aanwezig in de formulering zelf en niet als een aparte stap uitgeschreven. En die eis is niet gebonden aan stappen: “Elke regel toegepast” legt een verplichting op aan een vlakke referentielijst, net zoals “elke stap uitgevoerd” dat doet bij een sequentie.
+  Daardoor moet zelfs een document dat volledig uit verwijzingen bestaat nog steeds voldoen aan een volledigheidseis.
 
-The strongest criteria are both checkable and exhaustive.
+De sterkste criteria zijn zowel controleerbaar als exhaustief.
 
-## When to split
+## Wanneer te splitsen
 
-Splitting one document into two spends one of the two loads, so split only when the cut earns it:
+Het opsplitsen van één document in tweeën verbruikt één van de twee belastingen, dus splits alleen wanneer de snede dit rechtvaardigt:
 
-- **By sequence** — split a run of steps where the post-completion steps tempt the agent to rush the one in front of it. Keeping them out of view drives more legwork on the current task. Beware the reverse: merging sequences exposes each step's later steps to what follows, inviting premature completion.
-- **By invocation** — skill-specific: see [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md).
+- **Op volgorde (By sequence)** — splits een reeks stappen waarbij de stappen na voltooiing de agent verleiden om te haasten voor degene die ervoor ligt. Ze uit het zicht houden drijft meer inspanning aan voor de huidige taak. Pas op voor het omgekeerde: het samenvoegen van reeksen stelt latere stappen van elke stap bloot aan wat volgt, wat uitnodigt tot voortijdige voltooiing.
+- **Op aanroep (By invocation)** — skill-specifiek: zie [`SKILL-MECHANICS.md`](SKILL-MECHANICS.md).
 
-## Leading words
+## Leidende woorden (Leading words)
 
-A **leading word** is a compact concept already living in the model's pretraining that the agent thinks with while running the document (_lesson_, _fog of war_, _tracer bullets_). Repeated as a token, never as a sentence, it accumulates a distributed definition and anchors a whole region of behaviour in the fewest tokens, by recruiting priors the model already holds. Coining your own works if you define it clearly, but a made-up word recruits no priors — you pay in definition tokens what a pretrained word gives free; reach for an existing word first.
+Een **leidend woord** is een compact concept dat al aanwezig is in de pre-training van het model en waarmee de agent denkt tijdens het uitvoeren van het document (_les_, _oorlogsmist_, _tracer-kogels_). Herhaald als een token, nooit als een zin, accumuleert het een gedistribueerde definitie en verankert het een heel gedragsgebied in de minste tokens, door een beroep te doen op priors die het model al bezit. Een eigen term bedenken werkt zolang je ze duidelijk definieert, maar een verzonnen woord heeft geen bestaande associaties —  je betaalt in definitietokens wat een voorgetraind woord gratis oplevert; grijp daarom eerst naar een bestaand woord
 
-It anchors twice. In the body, _execution_: the agent reaches for the same behaviour every time the word appears, and inside flat reference it focuses attention on a class of thing to look for. In a pointer, _invocation_: when the same word lives in your prompts, your docs, and your codebase, the agent links that shared language to the material and reaches it more reliably.
+Het verankert op twee manieren. In de hoofdtekst, uitvoering (execution): de agent grijpt naar hetzelfde gedrag telkens wanneer het woord verschijnt, en binnen plat naslagwerk richt het de aandacht op een klasse van dingen om naar te zoeken. In een pointer, *aanroep (invocation)*: wanneer hetzelfde woord voorkomt in je prompts, je documentatie en je codebase, verbindt de agent die gedeelde taal met het materiaal en bereikt hij het **consistenter en betrouwbaarder**.
 
-Hunt for opportunities to refactor with leading words. A triad spelled out at three sites, a pointer spending a sentence to gesture at one idea — each is a passage begging to collapse into a single token:
+Ga op zoek naar kansen om te refactoren met leidende woorden. Een triade uitgeschreven op drie locaties, een pointer die een zin besteedt om naar één idee te gebaren — elk is een passage die smeekt om te worden samengevouwen tot één token:
 
-- "fast, deterministic, low-overhead" → _tight_ (a _tight_ loop).
-- "a loop you believe in" → _red_ — a fuzzy gate becomes a binary observable state (the loop goes _red_ on the bug, or it doesn't).
+- "snel, deterministisch, lage overhead" → _tight_ (een _tight_ loop).
+- "een loop waarin je gelooft" → _red_ — een vage poort wordt een binaire observeerbare staat (de loop wordt _red_ bij de bug, of niet).
 
-You win twice: fewer tokens, and a sharper hook for the agent to hang its thinking on. Assume every document is carrying restatements that leading words retire — go find them.
+Je wint twee keer: minder tokens en een scherpere haak waar de agent zijn denkwerk aan kan ophangen. Ga ervan uit dat elk document herformuleringen bevat die leidende woorden overbodig maken — ga ze zoeken.
 
-**Negation** is the failure mode beside this lever: steering by prohibition drags the forbidden behaviour into context and makes it _more_ available, not less. _Don't think of an elephant_, and the elephant is all there is; the negation is a weak modifier the strongly-activated concept overruns, so the ban half-reads as an instruction to do the thing. Prompt the **positive** — state the target behaviour ("write one-line comments") so the banned one is never spoken. A prohibition earns its place only as a hard guardrail you cannot phrase positively; even then, pair it with the positive target so attention lands on what to do.
+**Ontkenning (Negation)** is de faalmodus naast deze hefboom: sturen via verbod sleept het verboden gedrag de context in en maakt het **meer** beschikbaar, niet minder. _Denk niet aan een olifant_, en de olifant is alles wat er is; de negatie is een zwakke modifier die het sterk geactiveerde concept overloopt, zodat het verbod half leest als een instructie om het toch te doen. Prompt het **positieve** — benoem het doelgedrag (“schrijf éénregelige comments”) zodat het verboden gedrag nooit wordt uitgesproken. Een verbod verdient zijn plek alleen als een harde vangrail die je niet positief kunt formuleren; zelfs dan, koppel het aan het positieve doel zodat de aandacht landt op wat wél moet gebeuren.
 
-## Pruning
+## Snoeien (Pruning)
 
-- Keep each meaning in a **single source of truth**: one authoritative place, so changing the behaviour is a one-place edit. **Duplication** — the same meaning in more than one place — costs maintenance and tokens, and inflates a meaning's prominence on the ladder past its real rank. (The accidental inverse of a leading word, which repeats a token on purpose, never the meaning.)
-- The **environment** is a source of truth too — `package.json` scripts, config files, the directory layout, `--help` output — and a document that restates it is a **cache**: a copy of a lookup, earning its load only when the lookup is expensive. Cache what the agent cannot find by looking: the unwritten convention, the reason behind a choice, the gotcha no config confesses. Leave the one-file, one-command lookups to the environment, where they cannot go stale.
-- Check every line for **relevance**: does it still bear on what the document does? A line loses relevance by never bearing on the task (mere exposition, or a branch that should be disclosed) or by going stale as the behaviour or world it describes changes. Shorter documents are easier to keep relevant. Without a pruning discipline the default fate is **sediment**: stale layers that settle because adding feels safe and removing feels risky, until you must core down through them to find what is still live.
-- Hunt **no-ops** sentence by sentence: an instruction the model already obeys by default pays load to say nothing. The test — does it change behaviour versus the default? — is model-relative, not reader-relative: two people disagreeing about a no-op disagree about the default, and settle it by running the document, not by debate. When a sentence fails, delete the whole sentence rather than trim words from it. The test also grades leading words: a word too weak to beat the default (_be thorough_ when the agent is already thorough-ish) is a no-op, and the fix is a stronger word (_relentless_), not a different technique.
+- Houd elke betekenis in een **enkele bron van waarheid (single source of truth)**: één autoritaire plek, zodat het wijzigen van het gedrag een aanpassing op één plaats is. **Duplicatie** — dezelfde betekenis op meer dan één plek — kost onderhoud en tokens, en blaast het belang van een betekenis op de ladder op tot boven de werkelijke rang. (De toevallige inverse van een leidend woord, dat een token opzettelijk herhaalt, nooit de betekenis.)
+- De **omgeving** is eveneens een bron van waarheid — `package.json`-scripts, configuratiebestanden, de mapstructuur, `--help`-uitvoer — en een document dat dit herformuleert is een **cache**: een kopie van een opzoeking, die zijn belasting alleen verdient wanneer de opzoeking duur is. Cache wat de agent niet kan vinden door te kijken: de ongeschreven conventie, de reden achter een keuze, het addertje onder het gras dat geen enkele configuratie opbiecht. Laat de opzoekingen van één bestand en één commando over aan de omgeving, waar ze niet verouderd kunnen raken.
+- Controleer elke regel op **relevantie**: heeft deze nog steeds betrekking op wat het document doet? Een regel verliest relevantie doordat deze nooit betrekking heeft op de taak (pure expositie, of een vertakking die openbaar gemaakt moet worden) of doordat deze verouderd raakt naarmate het gedrag of de wereld die het beschrijft verandert. Kortere documenten zijn gemakkelijker relevant te houden. Zonder snoeidiscipline is het standaardlot **sediment**: verouderde lagen die bezinken omdat toevoegen veilig voelt en verwijderen riskant, totdat je er doorheen moet boren om te vinden wat nog leeft.
+- Jaag op **no-ops** zin voor zin: een instructie die het model al standaard opvolgt kost belasting om niets te zeggen. De test — verandert het het gedrag ten opzichte van de standaard? — is model-relatief, niet lezer-relatief: twee mensen die van mening verschillen over een no-op verschillen van mening over de standaard, en lossen dit op door het document uit te voeren, niet door te debatteren. Wanneer een zin faalt, verwijder dan de hele zin in plaats van woorden erin te snoeien. De test beoordeelt ook leidende woorden: een woord dat te zwak is om de standaard te verslaan (_wees grondig_ wanneer de agent al redelijk grondig is) is een no-op, en de oplossing is een sterker woord (_onverbiddelijk_), niet een andere techniek.

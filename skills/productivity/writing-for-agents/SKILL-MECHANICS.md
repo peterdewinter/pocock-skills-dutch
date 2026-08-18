@@ -1,22 +1,23 @@
-# Skill mechanics
+# Skillmechanica
 
-The skill-specific branch of [`writing-for-agents`](SKILL.md): what changes when the document is a skill — frontmatter, the invocation choice, and router skills. Everything else about writing it is the universal reference in `SKILL.md`.
+De skill-specifieke tak van [`writing-for-agents`](SKILL.md). Wat er verandert wanneer het document een skill is? De frontmatter, de keuze voor aanroep, en router-skills. De rest gebeurd volgens de universele beschrijving in `SKILL.md`.
 
-## Invocation
+## Aanroep
 
-Two choices, trading the two loads:
+Twee keuzes, die de twee loads tegen elkaar uitruilen:
 
-- A **model-invoked** skill keeps a `description`, so the agent can fire it autonomously — and other skills can reach it. You can still type its name: model-invocation always _includes_ user reach; a description only ever adds agent discovery, never removes the human's. The description is the skill's top-level context pointer, forced to stay loaded at all times — permanent context load in exchange for discoverability. A model-invoked skill whose content is all reference is also one home for shared reference: another skill can invoke it, so reference needed by several skills lives in one place. Mechanics: omit `disable-model-invocation`, and write a model-facing description carrying the trigger branches (the pointer-writing rules in `SKILL.md` apply in full).
-- A **user-invoked** skill strips the description from the agent's reach: only the human typing its name can invoke it, and no other skill can. Zero context load, but it spends cognitive load — you are the index that must remember it exists. Mechanics: set `disable-model-invocation: true`; the `description` becomes human-facing — a one-line summary, trigger lists stripped.
+- Een **model-aangeroepen** skill behoudt een `description`, zodat de agent ze autonoom kan activeren — en andere skills haar kunnen bereiken. Je kunt haar naam nog steeds typen: model-aanroep omvat altijd de menselijke aanroep; een description voegt alleen agent-discovery toe, en verwijdert nooit de mens. De description is de skill’s contextpointer op het hoogste niveau, verplicht om altijd geladen te zijn — permanente context load in ruil voor vindbaarheid. Een model-aangeroepen skill waarvan de inhoud volledig referentie is, is ook een thuis voor gedeelde referentie: een andere skill kan haar aanroepen, zodat referentie die door meerdere skills nodig is op één plek leeft. Mechanica: laat `disable-model-invocation` weg, en schrijf een modelgerichte description die de oproepingstakken draagt (de schrijfregels van pointers in `SKILL.md` gelden volledig).
 
-Pick model-invocation only when the agent must reach the skill on its own, or another skill must. If it only ever fires by hand, make it user-invoked and pay no context load.
+- Een **door de gebruiker aangeroepen** skill haalt de description weg uit het bereik van de agent: alleen de mens die de naam typt kan haar aanroepen, en geen enkele andere skill kan dat. Nul context load, maar het kost cognitieve load — jij bent de index die moet onthouden dat ze bestaat. Mechanica: zet `disable-model-invocation: true`; de `description` wordt mensgericht — een éénregelige samenvatting, zonder triggerlijsten.
 
-Shared reference that two user-invoked skills both need can live in neither — with no descriptions, neither can fire the other. Push it to a plain file outside the skill system: external reference any skill can point at.
+Kies model-aanroep alleen wanneer de agent de skill zelfstandig moet kunnen bereiken, of wanneer een andere skill dat moet. Als ze alleen met de hand wordt geactiveerd, maak haar user-invoked en betaal geen context load.
 
-## Splitting by invocation
+Gedeelde referentie die twee user-invoked skills allebei nodig hebben, kan in geen van beide leven — zonder descriptions kan geen van beide de ander aanroepen. Verplaats die naar een gewoon bestand buiten het skillsysteem: externe referentie waar elke skill naar kan verwijzen.
 
-The invocation cut of splitting (the sequence cut lives in `SKILL.md`): split off a model-invoked skill when you have a distinct leading word that should trigger it on its own — a trigger word you actually use in your prompts — or another skill must reach it. You pay context load for the new always-loaded description, so that independent reach has to be worth it.
+## Splitsen op aanroep
 
-## Router skills
+De aanroep-splitsing (de sequentiesplitsing staat in `SKILL.md`): splits een model-aangeroepen skill af wanneer je een duidelijk leidend woord hebt dat haar zelfstandig moet activeren — een triggerwoord dat je daadwerkelijk in je prompts gebruikt — of wanneer een andere skill haar moet bereiken. Je betaalt context load voor de nieuwe altijd geladen description, dus die onafhankelijke bereikbaarheid moet de moeite waard zijn.
 
-When user-invoked skills multiply past what you can remember, that piled-up cognitive load is cured by a **router skill**: one user-invoked skill that names the others and when to reach for each, so the human has one skill to remember instead of many. It can only hint, never fire them: user-invoked skills have no description, so nothing but the human can reach them.
+## Router-skills
+
+Wanneer user-invoked skills zich opstapelen voorbij wat je kunt onthouden, wordt die opgehoopte cognitieve load opgelost door een **router-skill**: één user-invoked skill die de andere benoemt en aangeeft wanneer je welke moet gebruiken, zodat de mens één skill hoeft te onthouden in plaats van vele. Ze kan alleen aanwijzen, nooit activeren: user-invoked skills hebben geen description, dus niets behalve de mens kan ze bereiken.

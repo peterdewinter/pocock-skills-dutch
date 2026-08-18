@@ -1,22 +1,23 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+description: Gril de gebruiker onophoudelijk over een plan, beslissing of idee. Gebruik dit als de gebruiker zijn denken wil stress-testen of gebruik als eender welke ‘grill’ triggerzin wordt gebruikt. 
 ---
 
-Interview the user relentlessly until you reach a shared understanding. Map this as a **design tree**: every decision branches into the decisions that hang off it.
+Interview de gebruiker onophoudelijk totdat je tot een gedeeld begrip komt. Kaart dit in als een **ontwerpboom**: elke beslissing vertakt zich in de beslissingen die eraan hangen.
 
-Work the tree in **rounds**. The **frontier** is every decision whose prerequisites are already settled: the questions you can ask _now_ without guessing at answers you haven't heard yet. Ask the whole frontier in one round: number each question and give your recommended answer. Then wait for the user's answers before the next round.
+Werk de boom in **rondes**. De rand van het onderzochte gebied (frontier) is elke beslissing waarvan de vereisten al zijn vastgesteld: de vragen die je _nu_ kunt stellen zonder te raden op antwoorden die je nog niet hebt gehoord. Vraag de hele frontier in één ronde: nummeren elke vraag en geef je aanbevolen antwoord. Wacht dan op de antwoorden van de gebruiker voor de volgende ronde.
 
-Each question should be formatted like so:
+Elke vraag moet als volgt worden opgemaakt:
 
 ```
-❓ **Q1** - **<question title>**: <question body, might be multiple paragraphs, including multiple choices>
+❓ **Q1** - **<vraagtitel>**: <vraagtekst, kan meerdere alinea's zijn, inclusief meerdere keuzes>
 
-➡️ <your recommended answer>
+➡️ <Jouw aanbevolen antwoord>
 ```
 
-Each round the user answers reshapes the tree: settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
+Elke ronde die de gebruiker beantwoordt, verandert de boom: vastgestelde beslissingen duwen de grens naar buiten en deblokkeren vragen die van hen afhingen. Bereken de grens opnieuw en vraag de volgende ronde. Een vraag waarvan het antwoord afhangt van een andere vraag die nog openstaat in deze ronde hoort bij een _latere_ ronde, niet deze.
 
-Finding _facts_ is your job, never the user's. When a frontier question needs a fact from the environment (filesystem, tools, etc.), dispatch a sub-agent to find it; don't ask the user for anything you could look up yourself. Don't block on it: a running exploration is an unsettled prerequisite, so only the questions downstream of it wait for the sub-agent to report; ask the rest of the frontier now. The _decisions_ are the user's: put each to them and wait.
+Het vinden van _feiten_ is jouw taak, nooit die van de gebruiker. Wanneer een frontiervraag een feit uit de omgeving nodig heeft (bestandssysteem, tools, enz.), stuur dan een subagent om het te vinden; Vraag de gebruiker niet om iets wat je zelf kunt opzoeken. Blokkeer er niet op: een lopende verkenning is een onopgeloste vereiste, dus alleen de vragen stroomafwaarts wachten op de subagent om te rapporteren; Vraag het nu aan de rest van de frontier. De _beslissingen_ zijn die van de gebruiker: leg ze aan hen en wacht.
 
-The session is done when the frontier is empty: every branch of the design tree visited, nothing left silently assumed. Do not act on it until the user confirms you have reached a shared understanding.
+De sessie is afgelopen wanneer de grens leeg is: elke tak van de ontwerpboom wordt bezocht, niets blijft stilzwijgend aangenomen. Handel er niet naar totdat de gebruiker bevestigt dat jullie tot een gedeeld begrip zijn gekomen.
+
